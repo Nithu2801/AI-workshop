@@ -1,0 +1,17 @@
+{% extends "rentals/staff/base.html" %}
+
+{% block title %}Edit Bike | RideDesk Admin{% endblock %}
+{% block page_title %}Edit {{ bike.name }} {{ bike.model }}{% endblock %}
+
+{% block content %}
+<section class="staff-panel narrow-staff-panel">
+    <div class="staff-panel-head">
+        <div>
+            <p class="staff-eyebrow">{{ bike.number_plate }}</p>
+            <h2>Bike details</h2>
+        </div>
+        <a class="btn btn-sm btn-outline-dark" href="{% url 'staff_bikes' %}">Back</a>
+    </div>
+    {% include "rentals/staff/partials/bike_form.html" with form=form submit_label="Save bike" %}
+</section>
+{% endblock %}

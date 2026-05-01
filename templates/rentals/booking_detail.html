@@ -1,0 +1,59 @@
+{% extends "rentals/base.html" %}
+
+{% block title %}Booking Details | Motorbike Rental{% endblock %}
+{% block page_title %}Booking Details{% endblock %}
+
+{% block content %}
+<section class="detail-layout">
+    <article class="panel detail-panel">
+        <img class="detail-image" src="{{ booking.bike.image_src }}" alt="{{ booking.bike.name }} {{ booking.bike.model }}">
+        <div class="panel-header mt-3">
+            <div>
+                <p class="eyebrow mb-1">{{ booking.bike.number_plate }}</p>
+                <h2>{{ booking.bike.name }} {{ booking.bike.model }}</h2>
+            </div>
+            <span class="status-badge {{ booking.status_badge_class }}">{{ booking.get_status_display }}</span>
+        </div>
+        <p class="muted-text">{{ booking.bike.description }}</p>
+
+        <div class="booking-detail-grid">
+            <span><i class="bi bi-calendar-event"></i> Pickup: {{ booking.pickup_datetime|date:"M d, Y h:i A" }}</span>
+            <span><i class="bi bi-arrow-return-left"></i> Return: {{ booking.return_datetime|date:"M d, Y h:i A" }}</span>
+            <span><i class="bi bi-clock-history"></i> Duration: {{ booking.rental_days }} day{{ booking.rental_days|pluralize }}</span>
+            <span><i class="bi bi-cash-stack"></i> Total: Rs. {{ booking.total_amount }}</span>
+        </div>
+
+        {% if booking.notes %}
+            <div class="note-box mt-3">
+                <span>Notes</span>
+                <p>{{ booking.notes }}</p>
+            </div>
+        {% endif %}
+    </article>
+
+    <aside class="panel">
+        <div class="panel-header">
+            <div>
+                <p class="eyebrow mb-1">Payment</p>
+                <h2>Cash at office</h2>
+            </div>
+            <i class="bi bi-cash-coin panel-mark"></i>
+        </div>
+        {% if booking.payment %}
+            <div class="payment-status">
+                <span class="status-badge {{ booking.payment.status_badge_class }}">{{ booking.payment.get_status_display }}</span>
+                <strong>Rs. {{ booking.payment.amount }}</strong>
+            </div>
+            <p class="muted-text">Admin staff manually verify this payment after you pay cash at the office.</p>
+        {% endif %}
+
+        {% if booking.can_cancel %}
+            <form method="post" class="mt-4">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="cancel">
+                <button type="submit" class="btn btn-outline-danger w-100">Cancel Booking</button>
+            </form>
+        {% endif %}
+    </aside>
+</section>
+{% endblock %}

@@ -1,0 +1,93 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'admin/css/dashboard.css' %}">
+{% endblock %}
+
+{% block coltype %}colMS{% endblock %}
+{% block bodyclass %}{{ block.super }} dashboard rental-admin-dashboard{% endblock %}
+{% block nav-breadcrumbs %}{% endblock %}
+{% block nav-sidebar %}{% endblock %}
+
+{% block content %}
+<div id="content-main">
+    <section class="rental-admin-hero">
+        <div>
+            <p>Office Dashboard</p>
+            <h1>Motorbike Rental Admin</h1>
+        </div>
+        <a class="button rental-admin-button" href="{% url 'admin:rentals_booking_changelist' %}">Manage bookings</a>
+    </section>
+
+    <section class="rental-admin-stats" aria-label="Rental dashboard summary">
+        <article>
+            <span>Today Bookings</span>
+            <strong>{{ dashboard_stats.today_bookings }}</strong>
+        </article>
+        <article>
+            <span>Available Bikes</span>
+            <strong>{{ dashboard_stats.available_bikes }}</strong>
+        </article>
+        <article>
+            <span>Active Rentals</span>
+            <strong>{{ dashboard_stats.active_rentals }}</strong>
+        </article>
+        <article>
+            <span>Pending Payments</span>
+            <strong>{{ dashboard_stats.pending_payments }}</strong>
+        </article>
+        <article>
+            <span>Returns Due</span>
+            <strong>{{ dashboard_stats.returns_due }}</strong>
+        </article>
+        <article>
+            <span>Verified Revenue</span>
+            <strong>Rs. {{ dashboard_stats.verified_revenue }}</strong>
+        </article>
+    </section>
+
+    <section class="rental-admin-actions">
+        <a href="{% url 'admin:rentals_bike_add' %}">Add bike</a>
+        <a href="{% url 'admin:rentals_booking_changelist' %}">Approve bookings</a>
+        <a href="{% url 'admin:rentals_payment_changelist' %}">Confirm payments</a>
+        <a href="{% url 'admin:rentals_customerdocument_changelist' %}">Verify documents</a>
+        <a href="{% url 'admin:rentals_notification_add' %}">Create notification</a>
+    </section>
+
+    {% include "admin/app_list.html" with app_list=app_list show_changelinks=True %}
+</div>
+{% endblock %}
+
+{% block sidebar %}
+<div id="content-related">
+    <div class="module" id="recent-actions-module">
+        <h2>{% translate 'Recent actions' %}</h2>
+        <h3>{% translate 'My actions' %}</h3>
+            {% load log %}
+            {% get_admin_log 10 as admin_log for_user user %}
+            {% if not admin_log %}
+                <p>{% translate 'None available' %}</p>
+            {% else %}
+                <ul class="actionlist">
+                {% for entry in admin_log %}
+                    <li class="{% if entry.is_addition %}addlink{% endif %}{% if entry.is_change %}changelink{% endif %}{% if entry.is_deletion %}deletelink{% endif %}">
+                        {% if entry.is_deletion or not entry.get_admin_url %}
+                            {{ entry.object_repr }}
+                        {% else %}
+                            <a href="{{ entry.get_admin_url }}">{{ entry.object_repr }}</a>
+                        {% endif %}
+                        <br>
+                        {% if entry.content_type %}
+                            <span class="mini quiet">{% filter capfirst %}{{ entry.content_type.name }}{% endfilter %}</span>
+                        {% else %}
+                            <span class="mini quiet">{% translate 'Unknown content' %}</span>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+    </div>
+</div>
+{% endblock %}

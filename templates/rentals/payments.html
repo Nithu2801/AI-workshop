@@ -1,0 +1,38 @@
+{% extends "rentals/base.html" %}
+
+{% block title %}Payments | Motorbike Rental{% endblock %}
+{% block page_title %}Payments{% endblock %}
+
+{% block content %}
+<section class="panel mb-4">
+    <div class="panel-header">
+        <div>
+            <p class="eyebrow mb-1">Manual payment</p>
+            <h2>Pay cash at the office</h2>
+        </div>
+        <i class="bi bi-building panel-mark"></i>
+    </div>
+    <p class="muted-text mb-0">Online payments are not enabled. Bring your booking reference, license, and cash payment to the office. Admin staff will verify and update your payment status.</p>
+</section>
+
+<section class="booking-list">
+    {% for payment in payments %}
+        <article class="payment-card">
+            <div>
+                <h2>{{ payment.booking.bike.name }} {{ payment.booking.bike.model }}</h2>
+                <p>{{ payment.booking.bike.number_plate }} | Booking #{{ payment.booking.id }}</p>
+            </div>
+            <div class="payment-card-meta">
+                <strong>Rs. {{ payment.amount }}</strong>
+                <span class="status-badge {{ payment.status_badge_class }}">{{ payment.get_status_display }}</span>
+                <span>{{ payment.method }}</span>
+            </div>
+        </article>
+    {% empty %}
+        <div class="empty-state">
+            <i class="bi bi-cash-coin"></i>
+            <p>No payment records yet.</p>
+        </div>
+    {% endfor %}
+</section>
+{% endblock %}

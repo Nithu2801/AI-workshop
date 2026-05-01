@@ -1,0 +1,48 @@
+{% extends "rentals/staff/base.html" %}
+
+{% block title %}Bikes | RideDesk Admin{% endblock %}
+{% block page_title %}Bike Management{% endblock %}
+
+{% block content %}
+<section class="staff-grid form-and-list">
+    <article class="staff-panel">
+        <div class="staff-panel-head">
+            <div>
+                <p class="staff-eyebrow">Fleet</p>
+                <h2>Add bike</h2>
+            </div>
+        </div>
+        {% include "rentals/staff/partials/bike_form.html" with form=form submit_label="Add bike" %}
+    </article>
+
+    <article class="staff-panel">
+        <div class="staff-panel-head">
+            <div>
+                <p class="staff-eyebrow">Inventory</p>
+                <h2>All bikes</h2>
+            </div>
+        </div>
+        <div class="fleet-grid">
+            {% for bike in bikes %}
+                <article class="fleet-card">
+                    <img src="{{ bike.image_src }}" alt="{{ bike.name }} {{ bike.model }}">
+                    <div>
+                        <div class="fleet-card-head">
+                            <h3>{{ bike.name }} {{ bike.model }}</h3>
+                            {% if bike.is_available %}
+                                <span class="status-badge badge-soft-success">Available</span>
+                            {% else %}
+                                <span class="status-badge badge-soft-danger">Unavailable</span>
+                            {% endif %}
+                        </div>
+                        <p>{{ bike.number_plate }} | {{ bike.engine_cc }}cc | Rs. {{ bike.daily_rate }}/day</p>
+                        <a class="btn btn-sm btn-outline-dark" href="{% url 'staff_bike_edit' bike.pk %}">Edit</a>
+                    </div>
+                </article>
+            {% empty %}
+                <div class="staff-empty">No bikes added.</div>
+            {% endfor %}
+        </div>
+    </article>
+</section>
+{% endblock %}

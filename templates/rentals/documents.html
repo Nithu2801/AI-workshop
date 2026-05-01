@@ -1,0 +1,56 @@
+{% extends "rentals/base.html" %}
+
+{% block title %}Documents | Motorbike Rental{% endblock %}
+{% block page_title %}Documents{% endblock %}
+
+{% block content %}
+<section class="content-grid">
+    <article class="panel">
+        <div class="panel-header">
+            <div>
+                <p class="eyebrow mb-1">Verification</p>
+                <h2>Upload document</h2>
+            </div>
+            <i class="bi bi-file-earmark-arrow-up panel-mark"></i>
+        </div>
+        <form method="post" enctype="multipart/form-data" class="stacked-form">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="form-error">{{ field.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="btn btn-dark">Upload for verification</button>
+        </form>
+    </article>
+
+    <aside class="panel">
+        <div class="panel-header">
+            <div>
+                <p class="eyebrow mb-1">Submitted</p>
+                <h2>Your documents</h2>
+            </div>
+        </div>
+        <div class="document-list">
+            {% for document in documents %}
+                <article class="document-item">
+                    <div>
+                        <h3>{{ document.get_document_type_display }}</h3>
+                        <p>{{ document.uploaded_at|date:"M d, Y h:i A" }}</p>
+                    </div>
+                    <span class="status-badge {{ document.status_badge_class }}">{{ document.get_status_display }}</span>
+                </article>
+            {% empty %}
+                <div class="empty-state compact">
+                    <i class="bi bi-file-earmark"></i>
+                    <p>No uploaded documents.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </aside>
+</section>
+{% endblock %}

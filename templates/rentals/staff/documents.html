@@ -1,0 +1,54 @@
+{% extends "rentals/staff/base.html" %}
+
+{% block title %}Documents | RideDesk Admin{% endblock %}
+{% block page_title %}Document Verification{% endblock %}
+
+{% block content %}
+<section class="staff-panel">
+    <div class="staff-panel-head">
+        <div>
+            <p class="staff-eyebrow">Customer compliance</p>
+            <h2>Uploaded documents</h2>
+        </div>
+    </div>
+    <div class="staff-table-wrap">
+        <table class="staff-table">
+            <thead>
+                <tr>
+                    <th>Customer</th>
+                    <th>Type</th>
+                    <th>Uploaded</th>
+                    <th>Status</th>
+                    <th>File</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for document in documents %}
+                    <tr>
+                        <td>{{ document.customer.full_name }}</td>
+                        <td>{{ document.get_document_type_display }}</td>
+                        <td>{{ document.uploaded_at|date:"M d, Y h:i A" }}</td>
+                        <td><span class="status-badge {{ document.status_badge_class }}">{{ document.get_status_display }}</span></td>
+                        <td><a href="{{ document.file.url }}" target="_blank" rel="noreferrer">Open file</a></td>
+                        <td>
+                            {% if document.status == "PENDING" %}
+                                <form method="post" class="staff-inline-form">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="document_id" value="{{ document.id }}">
+                                    <button class="btn btn-sm btn-success" name="action" value="verify" type="submit">Verify</button>
+                                    <button class="btn btn-sm btn-outline-danger" name="action" value="reject" type="submit">Reject</button>
+                                </form>
+                            {% else %}
+                                <span class="staff-muted">Reviewed</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="6">No documents uploaded.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "rentals/base.html" %}
+
+{% block title %}Browse Bikes | Motorbike Rental{% endblock %}
+{% block page_title %}Browse Bikes{% endblock %}
+
+{% block content %}
+{% if form.errors %}
+    <div class="alert alert-danger">Please correct the highlighted booking form fields.</div>
+{% endif %}
+
+<section class="bike-grid">
+    {% for bike in bikes %}
+        <article class="bike-card">
+            <img src="{{ bike.image_src }}" alt="{{ bike.name }} {{ bike.model }}">
+            <div class="bike-card-body">
+                <div class="d-flex justify-content-between align-items-start gap-3">
+                    <div>
+                        <h2>{{ bike.name }} {{ bike.model }}</h2>
+                        <p>{{ bike.number_plate }} | {{ bike.engine_cc }}cc | {{ bike.fuel_type }}</p>
+                    </div>
+                    <span class="rate">Rs. {{ bike.daily_rate }}<small>/day</small></span>
+                </div>
+                <p class="muted-text">{{ bike.description }}</p>
+
+                <form method="post" class="booking-request-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="bike_id" value="{{ bike.id }}">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="pickup_{{ bike.id }}">Pickup</label>
+                            <input type="datetime-local" name="pickup_datetime" id="pickup_{{ bike.id }}" class="form-control" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="return_{{ bike.id }}">Return</label>
+                            <input type="datetime-local" name="return_datetime" id="return_{{ bike.id }}" class="form-control" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="notes_{{ bike.id }}">Notes</label>
+                            <textarea name="notes" id="notes_{{ bike.id }}" rows="2" class="form-control" placeholder="Pickup requests or rider notes"></textarea>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-dark mt-3">
+                        <i class="bi bi-send"></i> Request Booking
+                    </button>
+                </form>
+            </div>
+        </article>
+    {% empty %}
+        <div class="empty-state">
+            <i class="bi bi-bicycle"></i>
+            <p>No available bikes right now.</p>
+        </div>
+    {% endfor %}
+</section>
+{% endblock %}

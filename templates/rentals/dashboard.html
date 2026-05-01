@@ -1,0 +1,92 @@
+{% extends "rentals/base.html" %}
+
+{% block title %}Dashboard | Motorbike Rental{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<section class="summary-grid">
+    <article class="summary-card">
+        <div class="summary-icon bg-teal"><i class="bi bi-calendar2-check"></i></div>
+        <div>
+            <span>Total Bookings</span>
+            <strong>{{ summary.total|default:0 }}</strong>
+        </div>
+    </article>
+    <article class="summary-card">
+        <div class="summary-icon bg-green"><i class="bi bi-check2-circle"></i></div>
+        <div>
+            <span>Approved Bookings</span>
+            <strong>{{ summary.approved|default:0 }}</strong>
+        </div>
+    </article>
+    <article class="summary-card">
+        <div class="summary-icon bg-amber"><i class="bi bi-hourglass-split"></i></div>
+        <div>
+            <span>Pending Bookings</span>
+            <strong>{{ summary.pending|default:0 }}</strong>
+        </div>
+    </article>
+    <article class="summary-card">
+        <div class="summary-icon bg-red"><i class="bi bi-x-circle"></i></div>
+        <div>
+            <span>Cancelled Bookings</span>
+            <strong>{{ summary.cancelled|default:0 }}</strong>
+        </div>
+    </article>
+</section>
+
+<section class="content-grid mt-4">
+    <div class="panel">
+        <div class="panel-header">
+            <div>
+                <p class="eyebrow mb-1">Activity</p>
+                <h2>Recent bookings</h2>
+            </div>
+            <a href="{% url 'my_bookings' %}" class="btn btn-sm btn-outline-dark">View all</a>
+        </div>
+
+        <div class="booking-list">
+            {% for booking in recent_bookings %}
+                <article class="booking-row">
+                    <img src="{{ booking.bike.image_src }}" alt="{{ booking.bike.name }} {{ booking.bike.model }}">
+                    <div class="booking-row-body">
+                        <div class="d-flex justify-content-between gap-3 flex-wrap">
+                            <div>
+                                <h3>{{ booking.bike.name }} {{ booking.bike.model }}</h3>
+                                <p>{{ booking.bike.number_plate }}</p>
+                            </div>
+                            <span class="status-badge {{ booking.status_badge_class }}">{{ booking.get_status_display }}</span>
+                        </div>
+                        <div class="booking-meta">
+                            <span><i class="bi bi-calendar-event"></i>{{ booking.pickup_datetime|date:"M d, Y h:i A" }}</span>
+                            <span><i class="bi bi-arrow-return-left"></i>{{ booking.return_datetime|date:"M d, Y h:i A" }}</span>
+                            <span><i class="bi bi-cash"></i>Rs. {{ booking.total_amount }}</span>
+                        </div>
+                    </div>
+                </article>
+            {% empty %}
+                <div class="empty-state">
+                    <i class="bi bi-calendar-x"></i>
+                    <p>No bookings yet.</p>
+                    <a href="{% url 'browse_bikes' %}" class="btn btn-dark">Browse bikes</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <aside class="panel">
+        <div class="panel-header">
+            <div>
+                <p class="eyebrow mb-1">Office payment</p>
+                <h2>Cash only</h2>
+            </div>
+            <i class="bi bi-building-check panel-mark"></i>
+        </div>
+        <p class="muted-text">All rental payments are handled manually at the office. Admin staff verify your cash payment and confirm the booking in the system.</p>
+        <div class="office-card">
+            <span>Next step</span>
+            <strong>Bring your license and cash payment before pickup.</strong>
+        </div>
+    </aside>
+</section>
+{% endblock %}

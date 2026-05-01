@@ -1,0 +1,56 @@
+{% extends "rentals/staff/base.html" %}
+
+{% block title %}Reports | RideDesk Admin{% endblock %}
+{% block page_title %}Reports{% endblock %}
+
+{% block content %}
+<section class="staff-stat-grid compact-stats">
+    <article><span>Daily Bookings</span><strong>{{ report_stats.daily_bookings }}</strong><i class="bi bi-calendar-day"></i></article>
+    <article><span>Monthly Bookings</span><strong>{{ report_stats.monthly_bookings }}</strong><i class="bi bi-calendar3"></i></article>
+    <article><span>Monthly Revenue</span><strong>Rs. {{ report_stats.monthly_revenue }}</strong><i class="bi bi-cash"></i></article>
+    <article><span>Cancelled</span><strong>{{ report_stats.cancelled_bookings }}</strong><i class="bi bi-x-circle"></i></article>
+</section>
+
+<section class="staff-grid two-cols mt-4">
+    <article class="staff-panel">
+        <div class="staff-panel-head">
+            <div>
+                <p class="staff-eyebrow">Booking health</p>
+                <h2>Status breakdown</h2>
+            </div>
+        </div>
+        <div class="staff-list">
+            {% for row in status_counts %}
+                <div class="staff-list-row">
+                    <strong>{{ row.status }}</strong>
+                    <span>{{ row.total }}</span>
+                </div>
+            {% empty %}
+                <div class="staff-empty">No booking data.</div>
+            {% endfor %}
+        </div>
+    </article>
+
+    <article class="staff-panel">
+        <div class="staff-panel-head">
+            <div>
+                <p class="staff-eyebrow">Fleet demand</p>
+                <h2>Bike usage</h2>
+            </div>
+        </div>
+        <div class="staff-list">
+            {% for bike in bike_usage %}
+                <div class="staff-list-row">
+                    <div>
+                        <strong>{{ bike.name }} {{ bike.model }}</strong>
+                        <span>{{ bike.number_plate }}</span>
+                    </div>
+                    <span>{{ bike.total_bookings }} bookings</span>
+                </div>
+            {% empty %}
+                <div class="staff-empty">No bike usage data.</div>
+            {% endfor %}
+        </div>
+    </article>
+</section>
+{% endblock %}

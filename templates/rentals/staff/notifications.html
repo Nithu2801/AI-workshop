@@ -1,0 +1,55 @@
+{% extends "rentals/staff/base.html" %}
+
+{% block title %}Notifications | RideDesk Admin{% endblock %}
+{% block page_title %}Notifications{% endblock %}
+
+{% block content %}
+<section class="staff-grid form-and-list">
+    <article class="staff-panel">
+        <div class="staff-panel-head">
+            <div>
+                <p class="staff-eyebrow">Customer alert</p>
+                <h2>Send notification</h2>
+            </div>
+        </div>
+        <form method="post" class="staff-form">
+            {% csrf_token %}
+            {% for field in form %}
+                <div>
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}<div class="staff-form-error">{{ field.errors|striptags }}</div>{% endif %}
+                </div>
+            {% endfor %}
+            <button class="btn btn-dark" type="submit">Send notification</button>
+        </form>
+    </article>
+
+    <article class="staff-panel">
+        <div class="staff-panel-head">
+            <div>
+                <p class="staff-eyebrow">Recent</p>
+                <h2>Sent notifications</h2>
+            </div>
+        </div>
+        <div class="staff-list">
+            {% for notification in notifications %}
+                <div class="staff-list-row align-items-start">
+                    <div>
+                        <strong>{{ notification.title }}</strong>
+                        <span>{{ notification.customer.full_name }} | {{ notification.created_at|date:"M d, h:i A" }}</span>
+                        <p>{{ notification.message }}</p>
+                    </div>
+                    {% if notification.is_read %}
+                        <span class="status-badge badge-soft-success">Read</span>
+                    {% else %}
+                        <span class="status-badge badge-soft-warning">Unread</span>
+                    {% endif %}
+                </div>
+            {% empty %}
+                <div class="staff-empty">No notifications sent.</div>
+            {% endfor %}
+        </div>
+    </article>
+</section>
+{% endblock %}

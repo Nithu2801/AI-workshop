@@ -1,0 +1,66 @@
+{% extends "rentals/staff/base.html" %}
+
+{% block title %}Bookings | RideDesk Admin{% endblock %}
+{% block page_title %}Booking Management{% endblock %}
+
+{% block content %}
+<section class="staff-panel">
+    <div class="staff-panel-head">
+        <div>
+            <p class="staff-eyebrow">Rental pipeline</p>
+            <h2>Bookings</h2>
+        </div>
+        <form method="get" class="staff-filter-form">
+            <select class="form-select" name="status" onchange="this.form.submit()">
+                <option value="">All statuses</option>
+                {% for value, label in booking_statuses %}
+                    <option value="{{ value }}" {% if status_filter == value %}selected{% endif %}>{{ label }}</option>
+                {% endfor %}
+            </select>
+        </form>
+    </div>
+    <div class="staff-table-wrap">
+        <table class="staff-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Customer</th>
+                    <th>Bike</th>
+                    <th>Pickup</th>
+                    <th>Return</th>
+                    <th>Total</th>
+                    <th>Status</th>
+                    <th>Update</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                    <tr>
+                        <td>#{{ booking.id }}</td>
+                        <td>{{ booking.customer.full_name }}</td>
+                        <td>{{ booking.bike.name }} {{ booking.bike.model }}<br><span>{{ booking.bike.number_plate }}</span></td>
+                        <td>{{ booking.pickup_datetime|date:"M d, Y h:i A" }}</td>
+                        <td>{{ booking.return_datetime|date:"M d, Y h:i A" }}</td>
+                        <td>Rs. {{ booking.total_amount }}</td>
+                        <td><span class="status-badge {{ booking.status_badge_class }}">{{ booking.get_status_display }}</span></td>
+                        <td>
+                            <form method="post" class="staff-inline-form">
+                                {% csrf_token %}
+                                <input type="hidden" name="booking_id" value="{{ booking.id }}">
+                                <select class="form-select form-select-sm" name="status">
+                                    {% for value, label in booking_statuses %}
+                                        <option value="{{ value }}" {% if booking.status == value %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button class="btn btn-sm btn-dark" type="submit">Save</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="8">No bookings found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

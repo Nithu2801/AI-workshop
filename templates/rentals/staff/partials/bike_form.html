@@ -1,0 +1,22 @@
+<form method="post" class="staff-form">
+    {% csrf_token %}
+    <div class="row g-3">
+        {% for field in form %}
+            <div class="{% if field.name == 'description' or field.name == 'image_url' %}col-12{% else %}col-md-6{% endif %}">
+                {% if field.name == "is_available" %}
+                    <div class="form-check mt-4">
+                        {{ field }}
+                        <label class="form-check-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    </div>
+                {% else %}
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                {% endif %}
+                {% if field.errors %}
+                    <div class="staff-form-error">{{ field.errors|striptags }}</div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+    <button class="btn btn-dark mt-3" type="submit">{{ submit_label }}</button>
+</form>

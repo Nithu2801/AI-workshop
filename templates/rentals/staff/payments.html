@@ -1,0 +1,56 @@
+{% extends "rentals/staff/base.html" %}
+
+{% block title %}Payments | RideDesk Admin{% endblock %}
+{% block page_title %}Payment Management{% endblock %}
+
+{% block content %}
+<section class="staff-panel">
+    <div class="staff-panel-head">
+        <div>
+            <p class="staff-eyebrow">Manual cash workflow</p>
+            <h2>Payments</h2>
+        </div>
+    </div>
+    <div class="staff-table-wrap">
+        <table class="staff-table">
+            <thead>
+                <tr>
+                    <th>Booking</th>
+                    <th>Customer</th>
+                    <th>Bike</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Verified</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in payments %}
+                    <tr>
+                        <td>#{{ payment.booking.id }}</td>
+                        <td>{{ payment.booking.customer.full_name }}</td>
+                        <td>{{ payment.booking.bike.name }} {{ payment.booking.bike.model }}</td>
+                        <td>Rs. {{ payment.amount }}</td>
+                        <td><span class="status-badge {{ payment.status_badge_class }}">{{ payment.get_status_display }}</span></td>
+                        <td>{% if payment.verified_at %}{{ payment.verified_at|date:"M d, Y h:i A" }}{% else %}-{% endif %}</td>
+                        <td>
+                            {% if payment.status != "VERIFIED" %}
+                                <form method="post" class="staff-inline-form">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="payment_id" value="{{ payment.id }}">
+                                    <button class="btn btn-sm btn-success" name="action" value="verify" type="submit">Verify cash</button>
+                                    <button class="btn btn-sm btn-outline-danger" name="action" value="reject" type="submit">Reject</button>
+                                </form>
+                            {% else %}
+                                <span class="staff-muted">Verified by {{ payment.verified_by|default:"office" }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="7">No payments found.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

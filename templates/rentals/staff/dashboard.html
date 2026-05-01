@@ -1,0 +1,99 @@
+{% extends "rentals/staff/base.html" %}
+
+{% block title %}Admin Dashboard | RideDesk{% endblock %}
+{% block page_title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<section class="staff-stat-grid">
+    <article><span>Today Bookings</span><strong>{{ stats.today_bookings }}</strong><i class="bi bi-calendar-event"></i></article>
+    <article><span>Available Bikes</span><strong>{{ stats.available_bikes }}</strong><i class="bi bi-bicycle"></i></article>
+    <article><span>Active Rentals</span><strong>{{ stats.active_rentals }}</strong><i class="bi bi-lightning-charge"></i></article>
+    <article><span>Pending Payments</span><strong>{{ stats.pending_payments }}</strong><i class="bi bi-cash-stack"></i></article>
+    <article><span>Returns Due</span><strong>{{ stats.returns_due }}</strong><i class="bi bi-arrow-return-left"></i></article>
+    <article><span>Verified Revenue</span><strong>Rs. {{ stats.verified_revenue }}</strong><i class="bi bi-graph-up-arrow"></i></article>
+</section>
+
+<section class="staff-grid two-cols mt-4">
+    <article class="staff-panel">
+        <div class="staff-panel-head">
+            <div>
+                <p class="staff-eyebrow">Action queue</p>
+                <h2>Pending bookings</h2>
+            </div>
+            <a class="btn btn-sm btn-dark" href="{% url 'staff_bookings' %}">Manage</a>
+        </div>
+        <div class="staff-list">
+            {% for booking in pending_bookings %}
+                <div class="staff-list-row">
+                    <div>
+                        <strong>#{{ booking.id }} {{ booking.customer.full_name }}</strong>
+                        <span>{{ booking.bike.name }} {{ booking.bike.model }} | {{ booking.pickup_datetime|date:"M d, h:i A" }}</span>
+                    </div>
+                    <span class="status-badge {{ booking.status_badge_class }}">{{ booking.get_status_display }}</span>
+                </div>
+            {% empty %}
+                <div class="staff-empty">No pending bookings.</div>
+            {% endfor %}
+        </div>
+    </article>
+
+    <article class="staff-panel">
+        <div class="staff-panel-head">
+            <div>
+                <p class="staff-eyebrow">Verification</p>
+                <h2>Documents waiting</h2>
+            </div>
+            <a class="btn btn-sm btn-outline-dark" href="{% url 'staff_documents' %}">Review</a>
+        </div>
+        <div class="staff-list">
+            {% for document in pending_documents %}
+                <div class="staff-list-row">
+                    <div>
+                        <strong>{{ document.customer.full_name }}</strong>
+                        <span>{{ document.get_document_type_display }} | {{ document.uploaded_at|date:"M d, h:i A" }}</span>
+                    </div>
+                    <span class="status-badge {{ document.status_badge_class }}">{{ document.get_status_display }}</span>
+                </div>
+            {% empty %}
+                <div class="staff-empty">No documents waiting.</div>
+            {% endfor %}
+        </div>
+    </article>
+</section>
+
+<section class="staff-panel mt-4">
+    <div class="staff-panel-head">
+        <div>
+            <p class="staff-eyebrow">Cash desk</p>
+            <h2>Recent payments</h2>
+        </div>
+        <a class="btn btn-sm btn-outline-dark" href="{% url 'staff_payments' %}">Open payments</a>
+    </div>
+    <div class="staff-table-wrap">
+        <table class="staff-table">
+            <thead>
+                <tr>
+                    <th>Booking</th>
+                    <th>Customer</th>
+                    <th>Bike</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for payment in recent_payments %}
+                    <tr>
+                        <td>#{{ payment.booking.id }}</td>
+                        <td>{{ payment.booking.customer.full_name }}</td>
+                        <td>{{ payment.booking.bike.name }} {{ payment.booking.bike.model }}</td>
+                        <td>Rs. {{ payment.amount }}</td>
+                        <td><span class="status-badge {{ payment.status_badge_class }}">{{ payment.get_status_display }}</span></td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="5">No payments yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

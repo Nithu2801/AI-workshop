@@ -1,0 +1,39 @@
+{% extends "rentals/base.html" %}
+
+{% block title %}My Bookings | Motorbike Rental{% endblock %}
+{% block page_title %}My Bookings{% endblock %}
+
+{% block content %}
+<section class="booking-list">
+    {% for booking in bookings %}
+        <article class="booking-card">
+            <img src="{{ booking.bike.image_src }}" alt="{{ booking.bike.name }} {{ booking.bike.model }}">
+            <div class="booking-card-body">
+                <div class="booking-card-top">
+                    <div>
+                        <h2>{{ booking.bike.name }} {{ booking.bike.model }}</h2>
+                        <p>{{ booking.bike.number_plate }}</p>
+                    </div>
+                    <span class="status-badge {{ booking.status_badge_class }}">{{ booking.get_status_display }}</span>
+                </div>
+                <div class="booking-detail-grid">
+                    <span><i class="bi bi-calendar-event"></i> Pickup: {{ booking.pickup_datetime|date:"M d, Y h:i A" }}</span>
+                    <span><i class="bi bi-arrow-return-left"></i> Return: {{ booking.return_datetime|date:"M d, Y h:i A" }}</span>
+                    <span><i class="bi bi-clock-history"></i> {{ booking.rental_days }} day{{ booking.rental_days|pluralize }}</span>
+                    <span><i class="bi bi-cash-stack"></i> Rs. {{ booking.total_amount }}</span>
+                </div>
+                <div class="d-flex justify-content-between align-items-center gap-3 flex-wrap mt-3">
+                    <p class="muted-text mb-0">Manual office payment only. Staff confirm cash payment in admin.</p>
+                    <a href="{% url 'booking_detail' booking.pk %}" class="btn btn-outline-dark">View Details</a>
+                </div>
+            </div>
+        </article>
+    {% empty %}
+        <div class="empty-state">
+            <i class="bi bi-calendar-x"></i>
+            <p>You do not have any bookings yet.</p>
+            <a href="{% url 'browse_bikes' %}" class="btn btn-dark">Browse bikes</a>
+        </div>
+    {% endfor %}
+</section>
+{% endblock %}

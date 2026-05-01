@@ -1,0 +1,19 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}{% if title %}{{ title }} | {% endif %}Rental Admin{% endblock %}
+
+{% block extrastyle %}
+{{ block.super }}
+<link rel="stylesheet" href="{% static 'rentals/css/admin.css' %}">
+{% endblock %}
+
+{% block branding %}
+<div id="site-name">
+    <a href="{% url 'admin:index' %}">Motorbike Rental Admin</a>
+</div>
+{% endblock %}
+
+{% block nav-global %}
+<a class="admin-quick-link" href="{% url 'staff_dashboard' %}">Rental Admin Portal</a>
+{% endblock %}

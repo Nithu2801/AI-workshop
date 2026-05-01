@@ -1,0 +1,32 @@
+{% extends "rentals/base.html" %}
+
+{% block title %}Profile | Motorbike Rental{% endblock %}
+{% block page_title %}Profile{% endblock %}
+
+{% block content %}
+<section class="panel narrow-panel">
+    <div class="panel-header">
+        <div>
+            <p class="eyebrow mb-1">Account</p>
+            <h2>Customer profile</h2>
+        </div>
+        <i class="bi bi-person-badge panel-mark"></i>
+    </div>
+
+    <form method="post" class="stacked-form">
+        {% csrf_token %}
+        <div class="row g-3">
+            {% for field in form %}
+                <div class="col-md-6 {% if field.name == 'address' %}col-12{% endif %}">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="form-error">{{ field.errors|striptags }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-dark mt-3">Save profile</button>
+    </form>
+</section>
+{% endblock %}
