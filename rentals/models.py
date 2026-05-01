@@ -29,6 +29,7 @@ class Bike(models.Model):
     model = models.CharField(max_length=120)
     number_plate = models.CharField(max_length=30, unique=True)
     description = models.TextField(blank=True)
+    image = models.ImageField(upload_to="bikes/", blank=True)
     image_url = models.URLField(blank=True)
     daily_rate = models.DecimalField(max_digits=10, decimal_places=2)
     engine_cc = models.PositiveIntegerField(default=125)
@@ -45,6 +46,8 @@ class Bike(models.Model):
 
     @property
     def image_src(self):
+        if self.image:
+            return self.image.url
         return self.image_url or "https://placehold.co/900x600/e5e7eb/111827?text=Motorbike"
 
 

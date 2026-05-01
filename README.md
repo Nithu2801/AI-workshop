@@ -6,6 +6,7 @@ A runnable Django motorbike rental system with separate customer and office/admi
 
 - Customer dashboard with sidebar navigation, summary cards, booking cards, payments, documents, profile, and notifications.
 - Custom office/admin dashboard for bikes, bookings, payments, customers, documents, notifications, and reports.
+- Bike management with uploaded bike images, pricing, number plates, and availability.
 - Browse Bikes page where customers request rentals with pickup and return date/time.
 - Offline payment workflow: customers pay cash at the office, and staff verify payments manually in the admin dashboard.
 - Raw Django admin remains available at `/django-admin/` for advanced database editing.

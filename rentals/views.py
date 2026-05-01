@@ -135,7 +135,7 @@ def staff_dashboard(request):
 
 @staff_required
 def staff_bikes(request):
-    form = BikeForm(request.POST or None)
+    form = BikeForm(request.POST or None, request.FILES or None)
     if request.method == "POST" and form.is_valid():
         form.save()
         messages.success(request, "Bike added to the fleet.")
@@ -156,7 +156,7 @@ def staff_bikes(request):
 @staff_required
 def staff_bike_edit(request, pk):
     bike = get_object_or_404(Bike, pk=pk)
-    form = BikeForm(request.POST or None, instance=bike)
+    form = BikeForm(request.POST or None, request.FILES or None, instance=bike)
     if request.method == "POST" and form.is_valid():
         form.save()
         messages.success(request, "Bike updated.")

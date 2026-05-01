@@ -61,6 +61,17 @@ class BikeAdmin(admin.ModelAdmin):
     list_display = ("name", "model", "number_plate", "daily_rate", "engine_cc", "is_available")
     list_filter = ("is_available", "fuel_type")
     search_fields = ("name", "model", "number_plate")
+    fields = (
+        "name",
+        "model",
+        "number_plate",
+        "description",
+        "image",
+        "daily_rate",
+        "engine_cc",
+        "fuel_type",
+        "is_available",
+    )
 
 
 class PaymentInline(admin.StackedInline):

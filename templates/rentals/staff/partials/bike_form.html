@@ -1,8 +1,8 @@
-<form method="post" class="staff-form">
+<form method="post" enctype="multipart/form-data" class="staff-form">
     {% csrf_token %}
     <div class="row g-3">
         {% for field in form %}
-            <div class="{% if field.name == 'description' or field.name == 'image_url' %}col-12{% else %}col-md-6{% endif %}">
+            <div class="{% if field.name == 'description' or field.name == 'image' %}col-12{% else %}col-md-6{% endif %}">
                 {% if field.name == "is_available" %}
                     <div class="form-check mt-4">
                         {{ field }}

@@ -91,7 +91,7 @@ class BikeForm(forms.ModelForm):
             "model",
             "number_plate",
             "description",
-            "image_url",
+            "image",
             "daily_rate",
             "engine_cc",
             "fuel_type",
@@ -102,11 +102,14 @@ class BikeForm(forms.ModelForm):
             "model": forms.TextInput(attrs={"class": "form-control"}),
             "number_plate": forms.TextInput(attrs={"class": "form-control"}),
             "description": forms.Textarea(attrs={"rows": 3, "class": "form-control"}),
-            "image_url": forms.URLInput(attrs={"class": "form-control"}),
+            "image": forms.ClearableFileInput(attrs={"class": "form-control", "accept": "image/*"}),
             "daily_rate": forms.NumberInput(attrs={"class": "form-control", "min": "0", "step": "0.01"}),
             "engine_cc": forms.NumberInput(attrs={"class": "form-control", "min": "1"}),
             "fuel_type": forms.TextInput(attrs={"class": "form-control"}),
             "is_available": forms.CheckboxInput(attrs={"class": "form-check-input"}),
+        }
+        labels = {
+            "image": "Bike image",
         }
 
 

@@ -3,5 +3,7 @@ __pycache__/
 *.py[cod]
 db.sqlite3
 server*.log
+media/bikes/*
+!media/bikes/.gitkeep
 media/documents/*
 !media/documents/.gitkeep
