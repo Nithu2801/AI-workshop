@@ -1,7 +1,7 @@
 from functools import wraps
 
 from django.contrib import messages
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView, LogoutView
 from django.core.exceptions import PermissionDenied
@@ -92,7 +92,9 @@ def staff_required(view_func):
     @login_required
     def wrapped(request, *args, **kwargs):
         if not request.user.is_staff:
-            raise PermissionDenied("Only staff can access the admin dashboard.")
+            logout(request)
+            messages.warning(request, "Please log in with an admin or staff account to open the admin dashboard.")
+            return redirect("login")
         return view_func(request, *args, **kwargs)
 
     return wrapped
