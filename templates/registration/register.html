@@ -1,4 +1,4 @@
-{% load static %}
+{% load static socialaccount %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -17,6 +17,24 @@
         </div>
         <h1>Create customer account</h1>
         <p>Set up your profile before requesting a rental.</p>
+
+        {% if google_oauth_ready %}
+            <form method="post" action="{% provider_login_url 'google' process='login' %}" class="mb-3">
+                {% csrf_token %}
+                <button type="submit" class="google-auth-button">
+                    <i class="bi bi-google"></i>
+                    Continue with Google
+                </button>
+            </form>
+            <div class="auth-divider"><span>or complete details manually</span></div>
+        {% else %}
+            <button type="button" class="google-auth-button disabled" disabled>
+                <i class="bi bi-google"></i>
+                Continue with Google
+            </button>
+            <p class="auth-hint">Google sign-up is enabled after adding OAuth credentials in the admin.</p>
+            <div class="auth-divider"><span>or complete details manually</span></div>
+        {% endif %}
 
         <form method="post" class="stacked-form">
             {% csrf_token %}

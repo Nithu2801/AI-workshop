@@ -4,6 +4,7 @@ from decimal import Decimal
 from django.contrib.auth.models import User
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
+from django.contrib.sites.models import Site
 from django.utils import timezone
 
 from rentals.models import (
@@ -22,6 +23,10 @@ class Command(BaseCommand):
     help = "Create demo users, bikes, bookings, payments, documents, and notifications."
 
     def handle(self, *args, **options):
+        Site.objects.update_or_create(
+            id=1,
+            defaults={"domain": "127.0.0.1:8000", "name": "Motorbike Rental Local"},
+        )
         admin = self.create_user(
             username="admin",
             password="Admin@12345",

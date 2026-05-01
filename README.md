@@ -69,6 +69,28 @@ python manage.py createsuperuser
 5. Admin confirms the cash payment from the Payments screen.
 6. The payment becomes verified and the booking becomes confirmed.
 
+## Google Login Setup
+
+The login and register screens include **Continue with Google** for customers. The button is disabled until Google OAuth credentials are added.
+
+1. Create OAuth credentials in Google Cloud Console.
+2. Add this redirect URI:
+
+```text
+http://127.0.0.1:8000/accounts/google/login/callback/
+```
+
+3. Open `http://127.0.0.1:8000/django-admin/`.
+4. Go to **Social applications** and add a new app:
+   - Provider: `Google`
+   - Name: `Google`
+   - Client id: your Google client ID
+   - Secret key: your Google client secret
+   - Sites: move `127.0.0.1:8000` to chosen sites
+5. Save, then refresh `http://127.0.0.1:8000/login/`.
+
+Google-created users automatically get a customer profile.
+
 ## Useful Commands
 
 ```powershell

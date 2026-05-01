@@ -1,4 +1,4 @@
-{% load static %}
+{% load static socialaccount %}
 <!doctype html>
 <html lang="en">
 <head>
@@ -20,6 +20,24 @@
 
         {% if form.errors %}
             <div class="alert alert-danger">Please check your username and password.</div>
+        {% endif %}
+
+        {% if google_oauth_ready %}
+            <form method="post" action="{% provider_login_url 'google' process='login' %}" class="mb-3">
+                {% csrf_token %}
+                <button type="submit" class="google-auth-button">
+                    <i class="bi bi-google"></i>
+                    Continue with Google
+                </button>
+            </form>
+            <div class="auth-divider"><span>or</span></div>
+        {% else %}
+            <button type="button" class="google-auth-button disabled" disabled>
+                <i class="bi bi-google"></i>
+                Continue with Google
+            </button>
+            <p class="auth-hint">Google login is ready after adding OAuth credentials in the admin.</p>
+            <div class="auth-divider"><span>or</span></div>
         {% endif %}
 
         <form method="post" class="stacked-form">

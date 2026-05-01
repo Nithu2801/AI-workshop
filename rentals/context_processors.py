@@ -20,3 +20,16 @@ def notification_panel(request):
         "panel_notifications": notifications[:6],
         "unread_notifications_count": notifications.filter(is_read=False).count(),
     }
+
+
+def google_oauth(request):
+    try:
+        from allauth.socialaccount.models import SocialApp
+
+        google_ready = SocialApp.objects.filter(provider="google", sites__id=1).exists()
+    except Exception:
+        google_ready = False
+
+    return {
+        "google_oauth_ready": google_ready,
+    }
